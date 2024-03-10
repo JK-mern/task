@@ -34,3 +34,19 @@ export const sellerSignup = async (req, res, next) => {
     next(error);
   }
 };
+
+export const userLogin = async (req,res,next) =>{
+  try {
+    
+  } catch (error) {
+    
+  }
+}
+
+export const sellerLogin = async (req,res,next) =>{
+  try {
+    
+  } catch (error) {
+    
+  }
+}
