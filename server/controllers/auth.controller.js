@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import Seller from "../models/Seller.model.js";
+import { errorHandler } from "../utils/error.js";
+import jwt from "jsonwebtoken";
 
 export const userSignup = async (req, res, next) => {
   try {
@@ -35,18 +37,38 @@ export const sellerSignup = async (req, res, next) => {
   }
 };
 
-export const userLogin = async (req,res,next) =>{
+export const userLogin = async (req, res, next) => {
   try {
-    
-  } catch (error) {
-    
-  }
-}
+    const { email, password } = req.body;
+    let validUser = await User.findOne({ email });
+    if (!validUser) {
+      next(errorHandler(404, "User not Found"));
+      return;
+    }
 
-export const sellerLogin = async (req,res,next) =>{
+    const validPassword = bcrypt.compareSync(password, validUser.password);
+    if (!validPassword) {
+      next(errorHandler(404, "Invalid Username or password"));
+      return;
+    }
+
+    validUser.password = undefined;
+
+    const token = jwt.sign({ id: validUser._id }, process.env.JSON_WEB_TOKEN);
+    res
+      .cookie("accessToken", token, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      })
+      .status(200)
+      .json(validUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const sellerLogin = async (req, res, next) => {
   try {
     
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};

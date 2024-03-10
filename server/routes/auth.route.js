@@ -7,7 +7,7 @@ const router = express.Router()
 router.post("/signupUser",userSignup)
 router.post("/signupSeller",sellerSignup)
 router.post("/userLogin",userLogin)
-router.post("/userLogin",sellerLogin)
+router.post("/sellerLogin",sellerLogin)
 
 
 export default router
