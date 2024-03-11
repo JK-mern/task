@@ -13,7 +13,9 @@ export const userSignup = async (req, res, next) => {
       username: username,
       email: email,
       password: hashedPassowrd,
+      seller: false,
     });
+
     await newUser.save();
     res.status(200).json("Account created Successfully");
   } catch (error) {
@@ -29,6 +31,7 @@ export const sellerSignup = async (req, res, next) => {
       username: username,
       email: email,
       password: hashedPassowrd,
+      seller: true,
     });
     await newSeller.save();
     res.status(200).json("Account created Successfully");
@@ -51,7 +54,7 @@ export const userLogin = async (req, res, next) => {
       next(errorHandler(404, "Invalid Username or password"));
       return;
     }
-
+    4;
     validUser.password = undefined;
 
     const token = jwt.sign({ id: validUser._id }, process.env.JSON_WEB_TOKEN);
@@ -69,6 +72,27 @@ export const userLogin = async (req, res, next) => {
 
 export const sellerLogin = async (req, res, next) => {
   try {
-    
-  } catch (error) {}
+    const { email, password } = req.body;
+    const validSeller = await Seller.findOne({ email });
+    if (!validSeller) {
+      next(errorHandler(404, "Seller not Found"));
+      return;
+    }
+    const validPassword = bcrypt.compareSync(password, validSeller.password);
+    if (!validPassword) {
+      next(errorHandler(404, "Invalid username or password"));
+      return;
+    }
+    validSeller.password = undefined;
+    const token = jwt.sign({ id: validSeller._id }, process.env.JSON_WEB_TOKEN);
+    res
+      .cookie("accessToken", token, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      })
+      .status(200)
+      .json(validSeller);
+  } catch (error) {
+    next(error);
+  }
 };
