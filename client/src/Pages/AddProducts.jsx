@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import ErrorComponent from "../components/ErrorComponent";
+import axios from "axios";
+import SucessComponent from "../components/SucessComponent";
 
 function AddProducts() {
   const [file, setFile] = useState();
-  const [url, setUrl] = useState("")
+  const [url, setUrl] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const handleFile = (e) => {
     setFile(e.target.files[0]);
   };
@@ -12,7 +17,10 @@ function AddProducts() {
     description: "",
     featured: false,
     image: "",
+    category: "",
   });
+
+   console.log(formData)
 
   const handleChange = (e) => {
     if (e.target.id === "featured")
@@ -28,7 +36,7 @@ function AddProducts() {
     data.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
     data.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
     data.append("folder", "Cloudinary-React");
-    
+
     try {
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${
@@ -40,21 +48,45 @@ function AddProducts() {
         }
       );
       const res = await response.json();
-      setUrl(res.secure_url)
-      setFormData ({...formData,image: res.secure_url } )
+      setUrl(res.secure_url);
+      setFormData({ ...formData, image: res.secure_url });
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(formData)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!url) {
+      setError("Please upload a image to continue");
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+      return;
+    } else {
+      try {
+        const res = await axios.post("/api/product/addProduct", formData);
+        if (res.status === 200) {
+          setSuccess("Product Added Successfully");
+          setTimeout(() => {
+            setSuccess("");
+          }, 3000);
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <>
       <Navbar />
       <div className="max-w-screen-2xl  mx-auto px-4   ">
+        {error && <ErrorComponent message={error} />}
+        {success && <SucessComponent message={success} />}
         <h2 className="text-2xl font-bold mb-4 mt-6 lg:mt-10">Add Product</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               htmlFor="productName"
@@ -94,7 +126,6 @@ function AddProducts() {
                 className="form-checkbox h-4 w-4 text-indigo-600"
                 id="featured"
                 onChange={handleChange}
-
               />
               <span className="ml-2 text-sm text-white">Featured Product</span>
             </label>
@@ -127,6 +158,7 @@ function AddProducts() {
                 type="button"
                 className="btn btn-success"
                 onClick={uploadImage}
+                disabled={file ? false : true}
               >
                 {" "}
                 Upload
@@ -142,6 +174,29 @@ function AddProducts() {
                 alt="Uploaded file"
               />
             )}
+          </div>
+
+          <div className="mb-4 mt-2">
+            <label
+              htmlFor="productCategory"
+              className="block text-sm font-medium text-white"
+            >
+              Product Category
+            </label>
+            <select
+              id="category"
+              name="category"
+              onChange={handleChange}
+              required
+              className="mt-1 p-3 block w-full  text-white bg-slate-800 rounded-xl border-gray-300  lowercase"
+            >
+              <option value="" disabled >Select a category</option>
+              <option value="smartphone">Smartphone</option>
+              <option value="camera">Camera</option>
+              <option value="clothes">Clothes</option>
+              <option value="food">Food</option>
+              <option value="laptop">Laptop</option>
+            </select>
           </div>
 
           <div className="flex justify-center items-center mt-5">
