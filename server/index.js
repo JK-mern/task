@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import connectDb from "./utils/db.js"
 import  authRouter from "./routes/auth.route.js"
+import productRoute from './routes/product.route.js'
 
 dotenv.config()
 
@@ -12,6 +13,7 @@ connectDb()
 
 
 app.use ("/api/auth", authRouter)
+app.use('/api/product',productRoute)
 
 
 app.use((err, req, res, next) => {

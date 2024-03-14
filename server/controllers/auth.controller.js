@@ -45,14 +45,14 @@ export const userLogin = async (req, res, next) => {
     const { email, password } = req.body;
     let validUser = await User.findOne({ email });
     if (!validUser) {
-      next(errorHandler(404, "User not Found"));
-      return;
+      return next(errorHandler(404, "User not Found"));
+      
     }
 
     const validPassword = bcrypt.compareSync(password, validUser.password);
     if (!validPassword) {
-      next(errorHandler(404, "Invalid Username or password"));
-      return;
+       return next(errorHandler(404, "Invalid Username or password"));
+    
     }
     4;
     validUser.password = undefined;
@@ -75,13 +75,13 @@ export const sellerLogin = async (req, res, next) => {
     const { email, password } = req.body;
     const validSeller = await Seller.findOne({ email });
     if (!validSeller) {
-      next(errorHandler(404, "Seller not Found"));
-      return;
+      return next(errorHandler(404, "Seller not Found"));
+      
     }
     const validPassword = bcrypt.compareSync(password, validSeller.password);
     if (!validPassword) {
-      next(errorHandler(404, "Invalid username or password"));
-      return;
+      return next(errorHandler(404, "Invalid username or password"));
+      
     }
     validSeller.password = undefined;
     const token = jwt.sign({ id: validSeller._id }, process.env.JSON_WEB_TOKEN);
