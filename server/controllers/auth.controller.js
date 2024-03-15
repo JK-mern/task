@@ -7,7 +7,21 @@ import jwt from "jsonwebtoken";
 export const userSignup = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
-    console.log(username, email, password);
+    let user = await User.findOne ( {email})
+
+    if(user)
+    {
+      return  next(errorHandler((409), "email already used"))
+      
+    }
+
+    user = await User.findOne ( {username})
+    if(user)
+    {
+       return next(errorHandler((409), "username already used"))
+    
+    }
+  
     const hashedPassowrd = bcrypt.hashSync(password, 10);
     const newUser = new User({
       username: username,
@@ -26,6 +40,20 @@ export const userSignup = async (req, res, next) => {
 export const sellerSignup = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
+     let seller = await Seller.findOne ( {email})
+
+    if(seller)
+    {
+      return  next(errorHandler((409), "email already used"))
+      
+    }
+
+    seller= await Seller.findOne ( {username})
+    if(seller)
+    {
+       return next(errorHandler((409), "username already used"))
+    
+    }
     const hashedPassowrd = bcrypt.hashSync(password, 10);
     const newSeller = new Seller({
       username: username,

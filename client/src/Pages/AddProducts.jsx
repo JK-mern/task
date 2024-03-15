@@ -17,10 +17,8 @@ function AddProducts() {
     description: "",
     featured: false,
     image: "",
-    category: "",
+    category: "smartphone",
   });
-
-   console.log(formData)
 
   const handleChange = (e) => {
     if (e.target.id === "featured")
@@ -74,7 +72,11 @@ function AddProducts() {
           return;
         }
       } catch (error) {
-        console.log(error);
+        setError(error.response.data.message);
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+        return;
       }
     }
   };
@@ -190,7 +192,9 @@ function AddProducts() {
               required
               className="mt-1 p-3 block w-full  text-white bg-slate-800 rounded-xl border-gray-300  lowercase"
             >
-              <option value="" disabled >Select a category</option>
+              <option value="" disabled>
+                Select a category
+              </option>
               <option value="smartphone">Smartphone</option>
               <option value="camera">Camera</option>
               <option value="clothes">Clothes</option>

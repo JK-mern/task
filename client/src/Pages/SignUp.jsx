@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import ErrorComponent from "../components/ErrorComponent";
 
 function SignUp() {
   const [selectedRole, setSelectedRole] = useState("user");
   const [formData, setFormData] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const setRole = (e) => {
     setSelectedRole(e.target.id);
@@ -19,16 +22,26 @@ function SignUp() {
     if (selectedRole === "user") {
       try {
         const res = await axios.post("/api/auth//signupUser", formData);
-        console.log(res);
+        if (res.status === 200) navigate("/signin");
       } catch (error) {
-        console.log(error);
+        setErrorMessage(error.response.data.message);
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 3000);
+        return;
       }
     } else if (selectedRole === "seller") {
       try {
         const res = await axios.post("/api/auth/signupSeller", formData);
-        console.log(res);
+
+        if (res.status === 200) navigate("/signin");
       } catch (error) {
-        console.log(error);
+        console.log("error appeared");
+        setErrorMessage(error.response.data.message);
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 3000);
+        return;
       }
     }
   };
@@ -36,26 +49,27 @@ function SignUp() {
   return (
     <main>
       <div className="flex  max-w-6xl  mx-auto flex-col justify-center items-center h-screen">
+        {errorMessage && <ErrorComponent message={errorMessage} />}
         <h1 className="font-bold text-white text-3xl">Register</h1>
         <div>
-          <div className="flex gap-4     m-7  items-center  justify-center">
+        <div className="flex gap-4     m-7  items-center  justify-center">
             <button
-              className={`btn  ml-6 px-10  md:btn-wide ${
+              className={`btn  ml-6 px-10  md:btn-wide hover:text-white ${
                 selectedRole === "user" ? "bg-white text-black" : ""
               }`}
               id="user"
               onClick={setRole}
             >
-              User Register
+              User Login
             </button>
             <button
-              className={`btn  px-10 md:btn-wide ${
+              className={`btn  px-10 md:btn-wide hover:text-white ${
                 selectedRole === "seller" ? "bg-white text-black" : ""
               }`}
               id="seller"
               onClick={setRole}
             >
-              Seller Register
+              Seller Login
             </button>
           </div>
 
@@ -94,7 +108,10 @@ function SignUp() {
               />
             </div>
 
-            <button className="btn btn-primary ml-8   w-80 md:w-full "> Sign Up</button>
+            <button className="btn btn-primary ml-8   w-80 md:w-full ">
+              {" "}
+              Sign Up
+            </button>
           </form>
           <div className="mt-8  md:ml-10  flex gap-6 text-center justify-center">
             <h3>Already have account ? </h3>
