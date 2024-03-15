@@ -16,3 +16,46 @@ export const addProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const featuredProduct = async(rreq, res ,next) =>{
+  try {
+    const products = await Product.find({featured : true})
+    res.status(200).json(products)
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export const normalProducts = async(req,res,next) =>{
+  try {
+    const products = await Product.find({featured : false})
+    res.status(200).json(products)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const sortProducts = async(req,res,next) =>{
+  try {
+    
+      const searchby = req.params.category;
+      console.log(searchby);
+  
+      let query = {}; 
+  
+      if (searchby && searchby !== 'all') {
+      
+        query.category = searchby;
+      }
+
+      query.featured = { $ne: true };
+  
+      const products = await Product.find(query);
+      res.status(200).json(products);
+
+  } catch (error) {
+    next(error)
+  }
+}
