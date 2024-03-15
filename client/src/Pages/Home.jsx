@@ -75,7 +75,7 @@ function Home() {
           ))}
         </div>
       )}
-      <div className="max-w-screen-2xl mx-auto   flex mt-5  mb-4 p-3 gap-5 items-center">
+      <div className="max-w-screen-2xl mx-auto    flex   items-center mt-5  mb-4 p-3 gap-5 ">
         <label
           htmlFor="productCategory"
           className=" text-lg font-medium text-white"
@@ -100,7 +100,7 @@ function Home() {
         </select>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto  flex flex-col flex-wrap md:flex-row gap-6 m-10  ">
+      <div className="max-w-screen-2xl mx-auto  flex flex-col flex-wrap justify-center items-center lg:flex-row gap-6 m-10  ">
         {products &&
           products.map((product) => (
             <div key={product._id} className=" mr-3 lg:mr-0 px-3 gap-4   mt-5 shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]">
