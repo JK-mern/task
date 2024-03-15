@@ -1,7 +1,19 @@
+import axios from "axios";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { signOutSuccess } from "../Redux/user/user.slice";
 
 function Navbar() {
-  const handleLogout = async () => {};
+
+  const Dispatch = useDispatch()
+  const handleLogout = async () => {
+      try {
+          const res = await axios.post('/api/auth/signOut')
+          Dispatch (signOutSuccess())
+      } catch (error) {
+        console.log(error)
+      }
+  };
   return (
     <nav className="bg-gray-900">
       <div className="flex max-w-screen-2xl font-serif justify-between  py-5 items-center    mx-auto lg:flex-row">
