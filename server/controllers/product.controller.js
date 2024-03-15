@@ -41,7 +41,7 @@ export const sortProducts = async(req,res,next) =>{
   try {
     
       const searchby = req.params.category;
-      console.log(searchby);
+      
   
       let query = {}; 
   
