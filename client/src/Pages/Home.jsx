@@ -6,7 +6,7 @@ function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [products, setProducts] = useState([]);
-  const [category, setCategory ] = useState('all')
+  const [category, setCategory] = useState("all");
   const nextSlide = () => {
     setActiveIndex((prevIndex) =>
       prevIndex === featuredProducts.length - 1 ? 0 : prevIndex + 1
@@ -29,17 +29,17 @@ function Home() {
     findfeaturedProducts();
   }, []);
 
-  useEffect (()=>{
-    const sortProducts = async() =>{
-      let products = await axios.get(`/api/product/sort/${category}`)
-      setProducts(products.data)
-    }
-    sortProducts()
-  },[category])
+  useEffect(() => {
+    const sortProducts = async () => {
+      let products = await axios.get(`/api/product/sort/${category}`);
+      setProducts(products.data);
+    };
+    sortProducts();
+  }, [category]);
 
-  const handleChange = (e) =>{
-    setCategory(e.target.value)
-  }
+  const handleChange = (e) => {
+    setCategory(e.target.value);
+  };
 
   // useEffect(() => {
   //   const normalProduct = async () => {
@@ -50,27 +50,29 @@ function Home() {
   //   normalProduct();
   // }, []);
 
-
   return (
     <div>
       <Navbar />
 
       {featuredProducts && (
         <div className="carousel w-full">
-          <div
-            id="slide1"
-            className="carousel-item relative  w-full  h-[200px] md:h-[450px] "
-          >
-            <img src={featuredProducts[activeIndex]} className="w-full " />
-            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-              <button onClick={prevSlide} className="btn btn-circle">
-                ❮
-              </button>
-              <button onClick={nextSlide} className="btn btn-circle">
-                ❯
-              </button>
+          {featuredProducts.map((product, index) => (
+            <div
+              key={index} // Add unique key here
+              id={`slide${index + 1}`}
+              className="carousel-item relative w-full h-[200px] md:h-[450px]"
+            >
+              <img src={featuredProducts[activeIndex]} className="w-full" />
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <button onClick={prevSlide} className="btn btn-circle">
+                  ❮
+                </button>
+                <button onClick={nextSlide} className="btn btn-circle">
+                  ❯
+                </button>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       )}
       <div className="max-w-screen-2xl mx-auto   flex mt-5  mb-4 p-3 gap-5 items-center">
@@ -101,7 +103,7 @@ function Home() {
       <div className="max-w-screen-2xl mx-auto  flex flex-col flex-wrap md:flex-row gap-6 m-10  ">
         {products &&
           products.map((product) => (
-            <div className="  mr-3 lg:mr-0 px-3 gap-4   mt-5 shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]">
+            <div key={product._id} className=" mr-3 lg:mr-0 px-3 gap-4   mt-5 shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]">
               <img
                 src={product.image}
                 alt=""
