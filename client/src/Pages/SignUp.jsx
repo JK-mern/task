@@ -60,7 +60,7 @@ function SignUp() {
               id="user"
               onClick={setRole}
             >
-              User Login
+              User Register
             </button>
             <button
               className={`btn  px-10 md:btn-wide hover:text-white ${
@@ -69,7 +69,7 @@ function SignUp() {
               id="seller"
               onClick={setRole}
             >
-              Seller Login
+              Seller Register
             </button>
           </div>
 
