@@ -41,7 +41,7 @@ function SignIn() {
         const res = await axios.post("/api/auth/sellerLogin", formData);
         const data = res.data;
         Dispatch(signInSucces(data));
-        if (res.status === 2000) navigate("/home");
+        if (res.status === 200) navigate("/home");
       } catch (error) {
         setErrorMessage(error.response.data.message);
         setTimeout(() => {
