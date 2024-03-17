@@ -18,7 +18,7 @@ export const addProduct = async (req, res, next) => {
 };
 
 
-export const featuredProduct = async(rreq, res ,next) =>{
+export const featuredProduct = async(req, res ,next) =>{
   try {
     const products = await Product.find({featured : true})
     res.status(200).json(products)
